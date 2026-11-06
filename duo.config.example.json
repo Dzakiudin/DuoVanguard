@@ -1,0 +1,11 @@
+{
+  "jwt": "ISI_DENGAN_JWT_TOKEN_DUOLINGO_ANDA",
+  "timezone": "Asia/Jakarta",
+  "course": {
+    "from": "id",
+    "learning": "ja"
+  },
+  "lessonMinutes": 3,
+  "minGapMs": 90000,
+  "maxGapMs": 240000
+}

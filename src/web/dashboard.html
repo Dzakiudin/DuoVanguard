@@ -1,0 +1,2281 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DuoHacker + PRO v4.0 — Self-Hosted Control Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-main: #0b0f17;
+  --bg-panel: rgba(22, 30, 46, 0.88);
+  --bg-card: #161e2e;
+  --bg-card-hover: #1e293b;
+  --text-main: #f8fafc;
+  --text-sub: #94a3b8;
+  --border-col: rgba(255, 255, 255, 0.09);
+  --accent: #38bdf8;
+  --accent-glow: rgba(56, 189, 248, 0.35);
+  --green: #58cc02;
+  --green-dark: #46a302;
+  --amber: #fbbf24;
+  --danger: #f87171;
+  --danger-dark: #dc2626;
+  --purple: #c084fc;
+}
+body.light-mode {
+  --bg-main: #f1f5f9;
+  --bg-panel: rgba(255, 255, 255, 0.94);
+  --bg-card: #ffffff;
+  --bg-card-hover: #f8fafc;
+  --text-main: #0f172a;
+  --text-sub: #64748b;
+  --border-col: rgba(0, 0, 0, 0.1);
+  --accent: #0284c7;
+  --accent-glow: rgba(2, 132, 199, 0.2);
+}
+body.lite-mode * {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: radial-gradient(circle at top right, rgba(56, 189, 248, 0.12), transparent 45%),
+              radial-gradient(circle at bottom left, rgba(88, 204, 2, 0.08), transparent 45%),
+              var(--bg-main);
+  color: var(--text-main);
+  font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-height: 100vh;
+  padding-bottom: 60px;
+}
+.mono { font-family: 'JetBrains Mono', Consolas, monospace; }
+
+/* Top Navbar */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg-panel);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--border-col);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.brand-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent), var(--green));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 4px 15px var(--accent-glow);
+}
+.brand-title {
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: -0.3px;
+}
+.brand-sub {
+  font-size: 11px;
+  color: var(--text-sub);
+  font-weight: 700;
+}
+.nav-pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.nav-btn {
+  background: var(--bg-card);
+  color: var(--text-main);
+  border: 1px solid var(--border-col);
+  padding: 8px 13px;
+  border-radius: 11px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.18s ease;
+  text-decoration: none;
+}
+.nav-btn:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+  background: var(--bg-card-hover);
+}
+.nav-btn.primary {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.nav-btn.green {
+  background: rgba(88, 204, 2, 0.15);
+  border-color: var(--green);
+  color: var(--green);
+}
+.token-box {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.token-box input {
+  background: var(--bg-card);
+  color: var(--text-main);
+  border: 1px solid var(--border-col);
+  border-radius: 9px;
+  padding: 6px 10px;
+  width: 145px;
+  font-size: 12px;
+}
+
+/* Main Layout */
+.container {
+  max-width: 1240px;
+  margin: 22px auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 20px;
+}
+@media (max-width: 980px) {
+  .container { grid-template-columns: 1fr; }
+}
+
+.panel {
+  background: var(--bg-panel);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-col);
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+  margin-bottom: 18px;
+}
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.panel-title {
+  font-size: 13px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--text-sub);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Profile Card (DuoHacker v2.6 Style) */
+.prof-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-col);
+  border-radius: 16px;
+  padding: 14px;
+  position: relative;
+}
+.prof-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 3px solid var(--accent);
+  object-fit: cover;
+  background: #1e293b;
+  flex-shrink: 0;
+}
+.prof-info {
+  flex: 1;
+  min-width: 0;
+}
+.prof-name {
+  font-size: 17px;
+  font-weight: 900;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.prof-user {
+  font-size: 12px;
+  color: var(--text-sub);
+  font-weight: 700;
+}
+.prof-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.badge {
+  font-size: 10px;
+  font-weight: 900;
+  padding: 3px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.badge.sky { background: rgba(56, 189, 248, 0.16); color: var(--accent); border: 1px solid rgba(56, 189, 248, 0.35); }
+.badge.green { background: rgba(88, 204, 2, 0.16); color: var(--green); border: 1px solid rgba(88, 204, 2, 0.35); }
+.badge.amber { background: rgba(251, 191, 36, 0.16); color: var(--amber); border: 1px solid rgba(251, 191, 36, 0.35); }
+.badge.red { background: rgba(248, 113, 113, 0.16); color: var(--danger); border: 1px solid rgba(248, 113, 113, 0.35); }
+.badge.purple { background: rgba(192, 132, 252, 0.16); color: var(--purple); border: 1px solid rgba(192, 132, 252, 0.35); }
+.badge.clickable { cursor: pointer; transition: transform 0.15s; }
+.badge.clickable:hover { transform: scale(1.05); }
+
+/* Account Overview Totals */
+.acct-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 12px;
+}
+.acct-stat {
+  background: var(--bg-card);
+  border: 1px solid var(--border-col);
+  border-radius: 13px;
+  padding: 11px 12px;
+}
+.acct-stat .lbl {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--text-sub);
+}
+.acct-stat .val {
+  font-size: 19px;
+  font-weight: 900;
+  margin-top: 3px;
+}
+.acct-stat .sub {
+  font-size: 11px;
+  color: var(--text-sub);
+  margin-top: 2px;
+}
+
+/* Session Live Statistics (DuoHacker v2.6 4-column grid) */
+.live-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+@media (max-width: 640px) {
+  .live-stats { grid-template-columns: repeat(2, 1fr); }
+}
+.stat-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border-col);
+  border-radius: 14px;
+  padding: 12px;
+  text-align: center;
+}
+.stat-box .s-val {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--accent);
+}
+.stat-box .s-lbl {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--text-sub);
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+
+/* Farming Options Grid (DuoHacker v2.6 .dh-grid) */
+.opt-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 14px;
+}
+@media (max-width: 680px) {
+  .opt-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.dh-opt {
+  background: var(--bg-card);
+  border: 2px solid var(--border-col);
+  border-radius: 14px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  user-select: none;
+}
+.dh-opt:hover {
+  border-color: rgba(56, 189, 248, 0.5);
+  background: var(--bg-card-hover);
+}
+.dh-opt.active {
+  border-color: var(--accent);
+  background: rgba(56, 189, 248, 0.12);
+  box-shadow: 0 4px 16px var(--accent-glow);
+}
+.dh-opt .o-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 900;
+  font-size: 14px;
+}
+.dh-opt .o-sub {
+  font-size: 11px;
+  color: var(--text-sub);
+  font-weight: 700;
+}
+
+/* Sub-options config box */
+.sub-cfg {
+  background: var(--bg-card);
+  border: 1px solid var(--border-col);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.sub-cfg label {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text-sub);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.inp, select.inp {
+  background: var(--bg-main);
+  color: var(--text-main);
+  border: 1px solid var(--border-col);
+  border-radius: 9px;
+  padding: 7px 11px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
+}
+.inp:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* Delay Slider */
+.slider-wrap {
+  background: var(--bg-card);
+  border: 1px solid var(--border-col);
+  border-radius: 14px;
+  padding: 11px 14px;
+  margin-bottom: 14px;
+}
+.slider-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-sub);
+  margin-bottom: 6px;
+}
+.slider-wrap input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+/* Big Action Button */
+.btn-main {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  cursor: pointer;
+  background: var(--green);
+  color: #052e16;
+  border-bottom: 4px solid var(--green-dark);
+  transition: all 0.15s;
+}
+.btn-main:hover { filter: brightness(1.06); }
+.btn-main:active { transform: translateY(2px); border-bottom-width: 2px; }
+.btn-main.stop {
+  background: var(--danger);
+  color: #fff;
+  border-bottom-color: var(--danger-dark);
+}
+
+/* Quick Pin Cards (Duolingo PRO 3.1 Style) */
+.pin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 10px;
+}
+.pin-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-col);
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+}
+.pin-card .p-title {
+  font-size: 13px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.pin-card .p-desc {
+  font-size: 11px;
+  color: var(--text-sub);
+  font-weight: 600;
+}
+.btn-sm {
+  background: var(--accent);
+  color: #0f172a;
+  border: none;
+  border-radius: 9px;
+  padding: 8px 12px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-sm:hover { filter: brightness(1.08); }
+.btn-sm.green { background: var(--green); color: #052e16; }
+.btn-sm.amber { background: var(--amber); color: #451a03; }
+.btn-sm.purple { background: var(--purple); color: #2e1065; }
+.btn-sm.outline {
+  background: transparent;
+  color: var(--text-main);
+  border: 1px solid var(--border-col);
+}
+.btn-sm.outline:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Terminal Console */
+.console-box {
+  background: #05080f;
+  color: #38bdf8;
+  border: 1px solid var(--border-col);
+  border-radius: 14px;
+  padding: 12px;
+  height: 220px;
+  overflow-y: auto;
+  font-family: 'JetBrains Mono', Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+/* Modals (DuoHacker v2.6 Full Explorer Modals) */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(4, 7, 14, 0.78);
+  backdrop-filter: blur(8px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+.modal-backdrop.open { display: flex; }
+.modal-win {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-col);
+  border-radius: 22px;
+  width: 100%;
+  max-width: 820px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65);
+  overflow: hidden;
+}
+.modal-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-col);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.modal-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.modal-close {
+  background: var(--bg-card);
+  color: var(--text-sub);
+  border: 1px solid var(--border-col);
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  font-size: 16px;
+  font-weight: 900;
+  cursor: pointer;
+}
+.modal-close:hover { color: var(--danger); border-color: var(--danger); }
+.modal-toolbar {
+  padding: 12px 20px;
+  background: rgba(0, 0, 0, 0.18);
+  border-bottom: 1px solid var(--border-col);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.modal-body {
+  padding: 18px 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Filter Pills inside Modals */
+.pill-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.filter-pill {
+  background: var(--bg-card);
+  color: var(--text-sub);
+  border: 1px solid var(--border-col);
+  border-radius: 9px;
+  padding: 6px 11px;
+  font-size: 11px;
+  font-weight: 900;
+  cursor: pointer;
+}
+.filter-pill.active {
+  background: var(--accent);
+  color: #0f172a;
+  border-color: var(--accent);
+}
+
+/* Item Cards inside Shop / Quests / Leaderboard */
+.item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.item-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-col);
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.item-card.done {
+  border-color: rgba(88, 204, 2, 0.4);
+  background: rgba(88, 204, 2, 0.06);
+}
+.item-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+}
+.item-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 5px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.prog-bar {
+  width: 100%;
+  max-width: 240px;
+  height: 7px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+.prog-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--green));
+  border-radius: 99px;
+}
+
+/* Stacked Notifications (Duolingo PRO 3.1 Style) */
+#notif-stack {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 360px;
+}
+.pro-notif {
+  background: rgba(15, 23, 42, 0.92);
+  backdrop-filter: blur(16px);
+  color: #f8fafc;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-left: 4px solid var(--accent);
+  border-radius: 12px;
+  padding: 12px 15px;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  animation: slideIn 0.22s ease;
+}
+.pro-notif.ok { border-left-color: var(--green); }
+.pro-notif.err { border-left-color: var(--danger); }
+@keyframes slideIn {
+  from { transform: translateX(40px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+#confetti-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* Interactive Chess Board (Modal 6) */
+.chess-layout {
+  display: grid;
+  grid-template-columns: 356px 1fr;
+  gap: 18px;
+  align-items: start;
+}
+@media (max-width: 760px) {
+  .chess-layout { grid-template-columns: 1fr; }
+}
+.chess-board-wrap {
+  position: relative;
+  width: 344px;
+  height: 344px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 3px solid var(--border-col);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+  margin: 0 auto;
+  user-select: none;
+}
+.chess-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  width: 100%;
+  height: 100%;
+}
+.c-sq {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.c-sq.light { background: #e2e8f0; color: #0f172a; }
+.c-sq.dark { background: #475569; color: #f8fafc; }
+.c-sq.selected { background: rgba(56, 189, 248, 0.68) !important; }
+.c-sq.legal-dest::after {
+  content: '';
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(88, 204, 2, 0.85);
+  box-shadow: 0 0 8px rgba(88, 204, 2, 0.9);
+  position: absolute;
+}
+.c-sq.best-from { box-shadow: inset 0 0 0 3px #58cc02; }
+.c-sq.best-to { box-shadow: inset 0 0 0 3px #38bdf8; }
+.c-coord {
+  position: absolute;
+  font-size: 9px;
+  font-weight: 900;
+  opacity: 0.65;
+  pointer-events: none;
+}
+.c-coord.file { bottom: 2px; right: 3px; }
+.c-coord.rank { top: 2px; left: 3px; }
+.chess-svg-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<div id="notif-stack"></div>
+
+<!-- TOP NAVIGATION BAR -->
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-logo">🦉</div>
+    <div>
+      <div class="brand-title">DuoHacker <span style="color:var(--accent)">+ PRO</span> <span class="badge sky">v4.1</span></div>
+      <div class="brand-sub">Self-Hosted Control Center • Tanpa Dependency • Anti-CloudFront Failover</div>
+    </div>
+  </div>
+
+  <div class="nav-pills">
+    <button class="nav-btn green" onclick="openModal('modal-chess'); initChessBoard();">♟️ Chess Bot</button>
+    <button class="nav-btn primary" onclick="openModal('modal-shop'); loadShopModal();">🛒 Free Shop</button>
+    <button class="nav-btn primary" onclick="openModal('modal-quests'); loadQuestsModal();">🎯 Quests & Badges</button>
+    <button class="nav-btn primary" onclick="openModal('modal-league'); loadLeagueModal();">🏆 Leaderboard</button>
+    <button class="nav-btn" onclick="openModal('modal-rewards'); loadRewardsModal();">🎁 Chests</button>
+    <button class="nav-btn" onclick="openModal('modal-duome');">📅 Duome Log</button>
+    <button class="nav-btn" onclick="openModal('modal-accounts'); loadAccountsModal();">👥 Accounts & Links</button>
+    <a class="nav-btn green" href="/duohacker-pro.user.js" target="_blank" title="Install Tampermonkey Companion Userscript (Auto-Solver + Chess Bot + Fake Duolingo Max)">🧩 Userscript</a>
+    <button class="nav-btn" id="btn-lite" onclick="toggleLiteMode()" title="Lite Mode (Matikan Blur untuk Performa Tinggi)">⚡</button>
+    <button class="nav-btn" id="btn-theme" onclick="toggleTheme()" title="Dark / Light Mode">🌓</button>
+  </div>
+
+  <div class="token-box">
+    <input id="tok" type="password" placeholder="UI Token..." autocomplete="off">
+    <button class="nav-btn" onclick="refreshAll()">🔄 Sync</button>
+  </div>
+</header>
+
+<!-- MAIN DASHBOARD CONTAINER -->
+<main class="container">
+  <!-- LEFT COLUMN: PROFILE, TOTALS, WATCHDOG & AUTOSERVER -->
+  <section>
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">👤 Profil Akun Aktif</div>
+        <span id="verify-badge" class="badge sky">Checking...</span>
+      </div>
+
+      <div class="prof-card">
+        <img id="p-avatar" class="prof-avatar" src="https://simg-ssl.duolingo.com/avatar/default_2/medium" alt="avatar">
+        <div class="prof-info">
+          <div id="p-name" class="prof-name">Memuat...</div>
+          <div id="p-user" class="prof-user mono">@...</div>
+          <div class="prof-badges">
+            <span id="p-course" class="badge sky clickable" onclick="openModal('modal-course'); renderCourseModal();" title="Klik untuk ganti Course bahasa aktif">-- → --</span>
+            <span id="p-privacy" class="badge green clickable" onclick="togglePrivacy()" title="Klik untuk ubah PUBLIC / PRIVATE">PUBLIC</span>
+            <span id="p-plus" class="badge purple">FREE</span>
+            <span id="p-age" class="badge amber" title="Tanggal Pembuatan Akun">Dibuat: -</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="acct-grid">
+        <div class="acct-stat">
+          <div class="lbl">🔥 Current Streak</div>
+          <div id="st-streak" class="val">-</div>
+          <div id="st-streak-sub" class="sub">Longest: -</div>
+        </div>
+        <div class="acct-stat">
+          <div class="lbl">⚡ Total XP</div>
+          <div id="st-xp" class="val">-</div>
+          <div id="st-xp-sub" class="sub">Zone: -</div>
+        </div>
+        <div class="acct-stat" style="cursor:pointer" onclick="openModal('modal-rewards'); loadRewardsModal();" title="Klik untuk melihat & klaim peti reward satu per satu">
+          <div class="lbl">💎 Total Gems</div>
+          <div id="st-gems" class="val">-</div>
+          <div id="st-gems-sub" class="sub" style="color:var(--accent);text-decoration:underline;">Rewards: -</div>
+        </div>
+        <div class="acct-stat">
+          <div class="lbl">🔑 JWT & Watchdog</div>
+          <div id="st-jwt" class="val" style="font-size:14px">-</div>
+          <div id="st-jwt-sub" class="sub">Status: -</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AUTOSERVER & TASK SCHEDULER PANEL (Duolingo PRO 3.1 AutoServer) -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">🤖 AutoServer & Streak Protector</div>
+        <button class="btn-sm outline" onclick="runVerifyNow()">🛡️ Run Verify</button>
+      </div>
+      <div style="font-size:12px;color:var(--text-sub);line-height:1.5;margin-bottom:10px;">
+        Task Scheduler <span class="mono" style="color:var(--text-main)">DuoStreak</span> menjalankan <span class="mono">autoserver.mjs --verify</span> lalu menjaga streak otomatis setiap pukul <b>09:00 WIB</b>.
+      </div>
+      <div id="alert-banner" style="display:none;background:rgba(248,113,113,0.12);border:1px solid var(--danger);border-radius:11px;padding:10px;font-size:12px;color:var(--danger);margin-bottom:10px;"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn-sm green" onclick="quickStreakKeeper()">🔥 Jaga Streak Hari Ini</button>
+        <button class="btn-sm outline" onclick="loadServerLog()">📜 Muat duo.log</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- RIGHT COLUMN: LIVE STATS, FARMING CONTROL CENTER, PINNED TOOLS & CONSOLE -->
+  <section>
+    <!-- LIVE FARMING STATS -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">📊 Live Session Statistics</div>
+        <span id="runner-state" class="badge green">IDLE</span>
+      </div>
+      <div class="live-stats">
+        <div class="stat-box">
+          <div id="live-xp" class="s-val">+0</div>
+          <div class="s-lbl">⚡ XP Earned</div>
+        </div>
+        <div class="stat-box">
+          <div id="live-gems" class="s-val">+0</div>
+          <div class="s-lbl">💎 Gems Earned</div>
+        </div>
+        <div class="stat-box">
+          <div id="live-streak" class="s-val">+0</div>
+          <div class="s-lbl">🔥 Streak Gained</div>
+        </div>
+        <div class="stat-box">
+          <div id="live-timer" class="s-val mono">00:00</div>
+          <div class="s-lbl">⏱ Elapsed Time</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FARMING CONTROL CENTER (DuoHacker v2.6 Grid + PRO Options) -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">🚀 Farming Control Center</div>
+        <span style="font-size:11px;color:var(--text-sub);font-weight:800;">Pilih modul lalu klik Start</span>
+      </div>
+
+      <div class="opt-grid" id="farm-opt-grid">
+        <div class="dh-opt active" data-opt="xp" onclick="selectFarmOpt('xp')">
+          <div class="o-top"><span>⚡ Farm XP</span><span class="badge sky">4 Mode</span></div>
+          <div class="o-sub">Safe +13, Unit +110, Story +499</div>
+        </div>
+        <div class="dh-opt" data-opt="gems" onclick="selectFarmOpt('gems')">
+          <div class="o-top"><span>💎 Farm Gems</span><span class="badge green">Chests</span></div>
+          <div class="o-sub">Klaim reward bundle aman</div>
+        </div>
+        <div class="dh-opt" data-opt="streak" onclick="selectFarmOpt('streak')">
+          <div class="o-top"><span>🔥 Farm Streak</span><span class="badge amber">Safe Age</span></div>
+          <div class="o-sub">Keeper / Safe Age / Backfill</div>
+        </div>
+        <div class="dh-opt" data-opt="league" onclick="selectFarmOpt('league')">
+          <div class="o-top"><span>🏆 Auto League</span><span class="badge purple">Top #1</span></div>
+          <div class="o-sub">Kejar peringkat #1 otomatis</div>
+        </div>
+        <div class="dh-opt" data-opt="quests" onclick="selectFarmOpt('quests')">
+          <div class="o-top"><span>🎯 Daily Quests</span><span class="badge sky">Guard</span></div>
+          <div class="o-sub">Dry-run / kirim metrik aman</div>
+        </div>
+        <div class="dh-opt" data-opt="badges" onclick="selectFarmOpt('badges')">
+          <div class="o-top"><span>🏅 Monthly Badges</span><span class="badge amber">All/MM</span></div>
+          <div class="o-sub">Klaim semua badge bulanan</div>
+        </div>
+      </div>
+
+      <!-- DYNAMIC SUB-CONFIGURATION -->
+      <div id="sub-cfg-xp" class="sub-cfg">
+        <label>Mode XP:
+          <select id="xp-mode" class="inp">
+            <option value="safe">Safe Practice (+13 XP — Terverifikasi)</option>
+            <option value="unittest">Unit Test (~110 XP — Cepat)</option>
+            <option value="story">Stories fr-en-le-passeport (Hingga +499 XP)</option>
+            <option value="smart">Smart Fallback (Story → Unit → Safe)</option>
+          </select>
+        </label>
+        <label>Jumlah Sesi:
+          <input id="xp-count" type="number" class="inp" value="1" min="1" max="50" style="width:75px">
+        </label>
+        <label>Target XP (Opsional):
+          <input id="xp-target" type="number" class="inp" value="0" min="0" max="50000" step="100" style="width:95px" title="Isi 0 jika ingin berdasarkan Jumlah Sesi">
+        </label>
+      </div>
+
+      <div id="sub-cfg-gems" class="sub-cfg" style="display:none">
+        <label>Batas Klaim (Max Claims):
+          <input id="gems-max" type="number" class="inp" value="20" min="1" max="60" style="width:80px">
+        </label>
+        <label><input id="gems-all" type="checkbox"> Termasuk non-gem items</label>
+      </div>
+
+      <div id="sub-cfg-streak" class="sub-cfg" style="display:none">
+        <label>Mode Streak:
+          <select id="streak-mode" class="inp">
+            <option value="keeper">Streak Keeper (1 Sesi Hari Ini)</option>
+            <option value="safe">Safe Streak Backfill (Batas Umur Akun)</option>
+            <option value="backfill">Normal Streak Backfill (Mundur N Hari)</option>
+          </select>
+        </label>
+        <label>Jumlah Hari:
+          <input id="streak-days" type="number" class="inp" value="1" min="1" max="30" style="width:75px">
+        </label>
+      </div>
+
+      <div id="sub-cfg-league" class="sub-cfg" style="display:none">
+        <label>Metode Farming Liga:
+          <select id="league-mode" class="inp">
+            <option value="smart">Smart Fallback (Story → Unit → Safe)</option>
+            <option value="story">Stories (+499 XP/sesi)</option>
+            <option value="unittest">Unit Test (~110 XP/sesi)</option>
+            <option value="safe">Safe Practice (+13 XP/sesi)</option>
+          </select>
+        </label>
+        <label>Maks Putaran:
+          <input id="league-max" type="number" class="inp" value="15" min="1" max="50" style="width:75px">
+        </label>
+      </div>
+
+      <div id="sub-cfg-quests" class="sub-cfg" style="display:none">
+        <label>Eksekusi:
+          <select id="quest-action" class="inp">
+            <option value="dry">Dry-Run Preview (Hanya Cek Delta, Tanpa Kirim)</option>
+            <option value="send">Send Safe Metrics (Kirim Nyata ke goals-api)</option>
+          </select>
+        </label>
+        <label><input id="quest-all-metrics" type="checkbox"> Semua Metrik</label>
+        <label><input id="quest-force" type="checkbox"> Force (&gt;8 metrik)</label>
+      </div>
+
+      <div id="sub-cfg-badges" class="sub-cfg" style="display:none">
+        <label>Target Bulan (Kosong = Semua Badge Aman):
+          <input id="badge-month-inp" type="text" class="inp mono" placeholder="MM/YYYY (opsional)" style="width:155px">
+        </label>
+        <label><input id="badge-skip-old" type="checkbox" checked> Lewati badge lebih tua dari umur akun</label>
+      </div>
+
+      <!-- DELAY SLIDER -->
+      <div class="slider-wrap">
+        <div class="slider-head">
+          <span>⏱ FARMING DELAY PER SESI</span>
+          <span id="delay-lbl" class="mono" style="color:var(--accent)">1500 ms</span>
+        </div>
+        <input id="delay-slider" type="range" min="300" max="5000" step="100" value="1500" oninput="document.getElementById('delay-lbl').textContent = this.value + ' ms'">
+      </div>
+
+      <button id="btn-start-stop" class="btn-main" onclick="handleStartStop()">▶ START FARMING</button>
+    </div>
+
+    <!-- PINNED QUICK ACTIONS (Duolingo PRO 3.1 Quick Home Cards) -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">📌 Quick Actions (1-Click Tools)</div>
+      </div>
+      <div class="pin-grid">
+        <div class="pin-card">
+          <div>
+            <div class="p-title">⚡ Free XP Boost (15m)</div>
+            <div class="p-desc">Klaim <span class="mono">xp_boost_15</span> gratis (0 Gems, durasi 900s).</div>
+          </div>
+          <button class="btn-sm" onclick="quickBuy('xp_boost_15')">Klaim XP Boost</button>
+        </div>
+        <div class="pin-card">
+          <div>
+            <div class="p-title">👑 Free 3-Day Super Trial</div>
+            <div class="p-desc">Uji coba gratis <span class="mono">immersive_subscription</span>.</div>
+          </div>
+          <button class="btn-sm purple" onclick="quickBuy('immersive_subscription')">Klaim Super Trial</button>
+        </div>
+        <div class="pin-card">
+          <div>
+            <div class="p-title">❤️ Health Shield / Refill</div>
+            <div class="p-desc">Klaim <span class="mono">health_shield</span> atau refill hati gratis.</div>
+          </div>
+          <button class="btn-sm amber" onclick="quickBuy('health_shield')">Klaim Health Shield</button>
+        </div>
+        <div class="pin-card">
+          <div>
+            <div class="p-title">♟️ Chess Bot (Vs Oscar & PvP)</div>
+            <div class="p-desc">Rekomendasi langkah Stockfish NNUE + tombol Auto-Move lawan Oscar/Orang.</div>
+          </div>
+          <button class="btn-sm green" onclick="openModal('modal-chess'); initChessBoard();">Buka Chess Bot</button>
+        </div>
+        <div class="pin-card">
+          <div>
+            <div class="p-title">🧩 Browser Auto-Solver v4.1</div>
+            <div class="p-desc">Solve/Solve All diperbaiki + In-Game Chess Bot Overlay + Fake Duolingo Max.</div>
+          </div>
+          <a class="btn-sm green" style="text-align:center;text-decoration:none;" href="/duohacker-pro.user.js" target="_blank">Install Userscript</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIVE STREAMING CONSOLE LOG -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">💻 Activity & Streaming Console</div>
+        <div style="display:flex;gap:6px;">
+          <button class="btn-sm outline" onclick="loadServerLog()">Muat duo.log</button>
+          <button class="btn-sm outline" onclick="document.getElementById('console-out').textContent='Ready.\n'">Bersihkan</button>
+        </div>
+      </div>
+      <pre id="console-out" class="console-box">Ready. Pilih aksi di atas untuk memulai.</pre>
+    </div>
+  </section>
+</main>
+
+<!-- ==========================================================================
+     MODAL 1: FREE ITEM SHOP (Categorized + Search + Duolingo Icons)
+     ========================================================================== -->
+<div id="modal-shop" class="modal-backdrop">
+  <div class="modal-win">
+    <div class="modal-header">
+      <h3>🛒 Free Item Shop Catalog</h3>
+      <button class="modal-close" onclick="closeModal('modal-shop')">✕</button>
+    </div>
+    <div class="modal-toolbar">
+      <input id="shop-search" class="inp" type="text" placeholder="🔍 Cari nama atau ID item (mis. boost, heart, outfit)..." style="flex:1" oninput="renderShopList()">
+      <div class="pill-bar" id="shop-cat-pills">
+        <button class="filter-pill active" onclick="setShopCat('ALL', this)">ALL</button>
+        <button class="filter-pill" onclick="setShopCat('Free Trials', this)">TRIALS</button>
+        <button class="filter-pill" onclick="setShopCat('XP Boosts', this)">XP BOOSTS</button>
+        <button class="filter-pill" onclick="setShopCat('Hearts & Health', this)">HEARTS</button>
+        <button class="filter-pill" onclick="setShopCat('Streak & Freezes', this)">STREAK</button>
+        <button class="filter-pill" onclick="setShopCat('Outfits', this)">OUTFITS</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div id="shop-list" class="item-list">Memuat katalog shop...</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     MODAL 2: QUESTS & MONTHLY BADGES EXPLORER
+     ========================================================================== -->
+<div id="modal-quests" class="modal-backdrop">
+  <div class="modal-win">
+    <div class="modal-header">
+      <h3>🎯 Quests & Monthly Badges Explorer</h3>
+      <button class="modal-close" onclick="closeModal('modal-quests')">✕</button>
+    </div>
+    <div class="modal-toolbar">
+      <div class="pill-bar">
+        <button class="filter-pill active" onclick="setQuestCat('MONTHLY', this)">MONTHLY</button>
+        <button class="filter-pill" onclick="setQuestCat('DAILY', this)">DAILY</button>
+        <button class="filter-pill" onclick="setQuestCat('WEEKLY', this)">WEEKLY</button>
+        <button class="filter-pill" onclick="setQuestCat('FRIENDS', this)">FRIENDS</button>
+        <button class="filter-pill" onclick="setQuestCat('ALL', this)">ALL</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;font-size:12px;font-weight:800;">
+        <label><input type="checkbox" id="q-hide-done" onchange="renderQuestsList()"> Sembunyikan Selesai</label>
+        <label><input type="checkbox" id="q-safe-only" onchange="renderQuestsList()"> Hanya SAFE_METRICS</label>
+        <button class="btn-sm green" onclick="claimAllMonthlyFromModal()">🏅 Claim All Safe Monthly</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div id="quests-list" class="item-list">Memuat schema & progress goals-api...</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     MODAL 3: LEADERBOARD & AUTO-LEAGUE
+     ========================================================================== -->
+<div id="modal-league" class="modal-backdrop">
+  <div class="modal-win">
+    <div class="modal-header">
+      <h3>🏆 League Leaderboard Cohort</h3>
+      <button class="modal-close" onclick="closeModal('modal-league')">✕</button>
+    </div>
+    <div class="modal-toolbar">
+      <div id="league-summary" style="font-size:13px;font-weight:800;">Memuat data liga...</div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-sm outline" onclick="loadLeagueModal()">🔄 Refresh</button>
+        <button class="btn-sm green" onclick="closeModal('modal-league'); selectFarmOpt('league'); handleStartStop();">⚡ Auto-Farm ke #1</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div id="league-list" class="item-list">Memuat peringkat...</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     MODAL 4: DUOME ACTIVITY LOG
+     ========================================================================== -->
+<div id="modal-duome" class="modal-backdrop">
+  <div class="modal-win">
+    <div class="modal-header">
+      <h3>📅 Duome Real-Time XP Activity History</h3>
+      <button class="modal-close" onclick="closeModal('modal-duome')">✕</button>
+    </div>
+    <div class="modal-toolbar">
+      <div style="display:flex;gap:8px;flex:1;">
+        <input id="duome-uid" class="inp mono" type="text" placeholder="Masukkan User ID Duolingo..." style="flex:1">
+        <button class="btn-sm outline" onclick="fillMyDuomeId()">Akun Saya</button>
+        <button class="btn-sm" onclick="fetchDuome()">🔍 Cek Riwayat</button>
+      </div>
+      <label style="font-size:12px;font-weight:800;"><input type="checkbox" id="duome-raw" onchange="renderDuomeView()"> Raw JSON</label>
+    </div>
+    <div class="modal-body">
+      <div id="duome-out" class="item-list">Klik "Akun Saya" lalu "Cek Riwayat" untuk mengambil kalender XP dari Duome.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     MODAL 5: MULTI-ACCOUNT MANAGER & SUPERLINK CHECKER
+     ========================================================================== -->
+<div id="modal-accounts" class="modal-backdrop">
+  <div class="modal-win">
+    <div class="modal-header">
+      <h3>👥 Multi-Account Manager & Family Superlink Checker</h3>
+      <button class="modal-close" onclick="closeModal('modal-accounts')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="panel" style="margin-bottom:16px;">
+        <div class="panel-head">
+          <div class="panel-title">🔗 Family Plan Superlink Checker</div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <input id="superlink-inp" class="inp" type="text" placeholder="Tempel URL https://www.duolingo.com/family-plan/invite/... atau kode ID" style="flex:1">
+          <button class="btn-sm" onclick="checkSuperlinkNow()">Cek Link</button>
+        </div>
+        <div id="superlink-res" style="margin-top:10px;font-size:13px;font-weight:800;"></div>
+      </div>
+
+      <div class="panel" style="margin-bottom:0;">
+        <div class="panel-head">
+          <div class="panel-title">💾 Saved Accounts (Snapshot State Lokal)</div>
+          <button class="btn-sm green" onclick="saveCurrentAccount()">+ Simpan Akun Aktif</button>
+        </div>
+        <div style="font-size:11px;color:var(--text-sub);margin-bottom:10px;">
+          Menyimpan snapshot akun di <span class="mono">duo.config.state.json</span> lokal tanpa pernah menampilkan JWT di browser.
+        </div>
+        <div id="accounts-list" class="item-list">Memuat daftar akun...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     MODAL 6: DUOLINGO CHESS BOT & LIVE BOARD ANALYZER (VS OSCAR / PVP)
+     ========================================================================== -->
+<div id="modal-chess" class="modal-backdrop">
+  <div class="modal-win" style="max-width:880px;">
+    <div class="modal-header">
+      <h3>♟️ Duolingo Chess Bot & Engine Analyzer (Vs Oscar / PvP)</h3>
+      <button class="modal-close" onclick="closeModal('modal-chess')">✕</button>
+    </div>
+    <div class="modal-toolbar">
+      <div style="display:flex;gap:8px;flex:1;align-items:center;flex-wrap:wrap;">
+        <input id="chess-fen-inp" class="inp mono" type="text" value="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" style="flex:1;min-width:260px;font-size:11px;" placeholder="Tempel FEN papan catur...">
+        <button class="btn-sm" onclick="analyzeCurrentFen()">🔍 Analisis FEN</button>
+        <button class="btn-sm outline" onclick="flipChessBoard()">🔄 Flip</button>
+        <button class="btn-sm outline" onclick="resetChessBoard()">♻️ Reset</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="chess-layout">
+        <!-- Left: Interactive 8x8 Chessboard + SVG Arrow Overlay -->
+        <div>
+          <div class="chess-board-wrap">
+            <div id="chess-grid" class="chess-grid"></div>
+            <svg id="chess-svg" class="chess-svg-layer" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+          </div>
+          <div style="text-align:center;font-size:11px;color:var(--text-sub);margin-top:8px;font-weight:700;">
+            Klik bidak lalu klik petak tujuan, atau klik <b>"♟️ Jalankan Rekomendasi"</b> di kanan.
+          </div>
+        </div>
+
+        <!-- Right: Engine Recommendations & Auto-Move Controls -->
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div class="panel" style="margin-bottom:0;padding:14px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <span class="panel-title">🧠 Rekomendasi Engine</span>
+              <span id="chess-engine-badge" class="badge sky">Stockfish NNUE + Alpha-Beta</span>
+            </div>
+
+            <div style="background:var(--bg-card);border:1px solid var(--border-col);border-radius:12px;padding:12px;margin-bottom:10px;">
+              <div style="font-size:11px;color:var(--text-sub);font-weight:800;">LANGKAH TERBAIK (BEST MOVE):</div>
+              <div id="chess-best-move" class="mono" style="font-size:22px;font-weight:900;color:var(--green);margin-top:2px;">-</div>
+              <div id="chess-eval-text" style="font-size:12px;color:var(--text-sub);margin-top:4px;">Giliran: Putih • Eval: 0.00</div>
+            </div>
+
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px;font-size:12px;font-weight:800;">
+              <label style="cursor:pointer;"><input type="checkbox" id="chess-vs-oscar" checked> 🤖 Lawan Oscar (Bot balas otomatis)</label>
+              <label style="cursor:pointer;"><input type="checkbox" id="chess-use-cloud" checked onchange="analyzeCurrentFen()"> ☁️ Stockfish Cloud NNUE</label>
+            </div>
+
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="btn-sm green" style="flex:1;padding:11px;" onclick="playRecommendedChessMove()">♟️ Jalankan Rekomendasi (Auto-Move)</button>
+            </div>
+          </div>
+
+          <div class="panel" style="margin-bottom:0;padding:14px;">
+            <div class="panel-title" style="margin-bottom:8px;">📊 Top 5 Kandidat Gerakan (Klik untuk Jalan)</div>
+            <div id="chess-top-moves" class="item-list">Memuat analisis...</div>
+          </div>
+
+          <div style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);border-radius:12px;padding:10px 12px;font-size:11px;line-height:1.5;">
+            💡 <b>Tips In-Game Duolingo:</b> Saat bertanding lawan <b>Oscar</b> atau <b>Pemain Lain (PvP)</b> di web <span class="mono">duolingo.com</span>, pasang <a href="/duohacker-pro.user.js" target="_blank" style="color:var(--accent);font-weight:900;">Userscript v4.1</a> — panel <b>♟️ Chess Bot</b> akan muncul otomatis di layar pertandingan beserta garis panah hijau di atas papan dan tombol <b>"♟️ Gerakkan!"</b>.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     MODAL 7: INDIVIDUAL REWARD CHESTS EXPLORER
+     ========================================================================== -->
+<div id="modal-rewards" class="modal-backdrop">
+  <div class="modal-win">
+    <div class="modal-header">
+      <h3>🎁 Unclaimed Reward Bundles & Chests</h3>
+      <button class="modal-close" onclick="closeModal('modal-rewards')">✕</button>
+    </div>
+    <div class="modal-toolbar">
+      <div id="rewards-summary" style="font-size:13px;font-weight:800;">Memuat daftar peti...</div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-sm outline" onclick="loadRewardsModal()">🔄 Refresh</button>
+        <button class="btn-sm green" onclick="closeModal('modal-rewards'); selectFarmOpt('gems'); handleStartStop();">💎 Klaim Batch (Farm Gems)</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div id="rewards-list" class="item-list">Memuat daftar reward bundles...</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     MODAL 8: ACTIVE COURSE SWITCHER
+     ========================================================================== -->
+<div id="modal-course" class="modal-backdrop">
+  <div class="modal-win" style="max-width:560px;">
+    <div class="modal-header">
+      <h3>🌐 Ganti Course Bahasa Aktif</h3>
+      <button class="modal-close" onclick="closeModal('modal-course')">✕</button>
+    </div>
+    <div class="modal-toolbar">
+      <div style="display:flex;gap:8px;flex:1;align-items:center;">
+        <input id="course-from-inp" class="inp mono" type="text" placeholder="From (mis. id, en)" style="width:120px">
+        <span>→</span>
+        <input id="course-learn-inp" class="inp mono" type="text" placeholder="Learning (mis. ja, en, fr)" style="width:140px">
+        <button class="btn-sm green" onclick="switchCourseCustom()">Aktifkan</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div id="course-list" class="item-list">Memuat daftar course akun...</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+
+// Token Management
+const tokInput = $('tok');
+const qsTok = new URLSearchParams(location.search).get('t') || window.__DUO_UI_TOKEN__;
+if (qsTok) {
+  localStorage.setItem('duo_ui_tok', qsTok);
+  if (location.search.includes('t=')) history.replaceState({}, '', '/');
+}
+tokInput.value = localStorage.getItem('duo_ui_tok') || window.__DUO_UI_TOKEN__ || '';
+tokInput.onchange = () => localStorage.setItem('duo_ui_tok', tokInput.value.trim());
+
+function hdr(extra = {}) {
+  return { 'x-duo-token': tokInput.value.trim(), ...extra };
+}
+
+// Theme & Lite Mode toggles
+if (localStorage.getItem('dh_theme') === 'light') document.body.classList.add('light-mode');
+if (localStorage.getItem('dh_lite') === '1') document.body.classList.add('lite-mode');
+
+function toggleTheme() {
+  document.body.classList.toggle('light-mode');
+  localStorage.setItem('dh_theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+}
+
+function toggleLiteMode() {
+  document.body.classList.toggle('lite-mode');
+  const on = document.body.classList.contains('lite-mode');
+  localStorage.setItem('dh_lite', on ? '1' : '0');
+  notify(`Lite Mode: ${on ? 'ON (Tanpa Blur)' : 'OFF (Glassmorphism)'}`, 'info');
+}
+
+// Stacked Notification (Duolingo PRO 3.1 style)
+function notify(msg, type = 'info') {
+  const stack = $('notif-stack');
+  const el = document.createElement('div');
+  el.className = 'pro-notif ' + (type === 'ok' ? 'ok' : type === 'err' ? 'err' : '');
+  el.textContent = msg;
+  stack.appendChild(el);
+  setTimeout(() => {
+    el.style.opacity = '0';
+    el.style.transition = 'opacity 0.25s';
+    setTimeout(() => el.remove(), 260);
+  }, 3600);
+}
+
+// Confetti Celebration (Duolingo PRO 3.1 style)
+function celebrateConfetti() {
+  const canvas = $('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const pieces = Array.from({ length: 70 }, () => ({
+    x: Math.random() * canvas.width,
+    y: -20 - Math.random() * 100,
+    w: 6 + Math.random() * 6,
+    h: 8 + Math.random() * 8,
+    vx: -2 + Math.random() * 4,
+    vy: 3 + Math.random() * 5,
+    color: ['#38bdf8', '#58cc02', '#fbbf24', '#c084fc', '#f87171'][Math.floor(Math.random() * 5)],
+    rot: Math.random() * Math.PI,
+  }));
+  let frame = 0;
+  function tick() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rot += 0.08;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+    });
+    if (++frame < 95) requestAnimationFrame(tick);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  tick();
+}
+
+function logConsole(line) {
+  const box = $('console-out');
+  const ts = new Date().toLocaleTimeString('id-ID', { hour12: false });
+  box.textContent += `[${ts}] ${line}\n`;
+  box.scrollTop = box.scrollHeight;
+}
+
+async function apiGet(path) {
+  const r = await fetch(path, { headers: hdr() });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(d.error || ('HTTP ' + r.status));
+  return d;
+}
+
+async function apiPost(path, body = {}) {
+  const r = await fetch(path, {
+    method: 'POST',
+    headers: hdr({ 'content-type': 'application/json' }),
+    body: JSON.stringify(body),
+  });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(d.error || ('HTTP ' + r.status));
+  return d;
+}
+
+// Global State
+let currentProfile = null;
+let selectedOpt = 'xp';
+let isRunning = false;
+let sessionStats = { xp: 0, gems: 0, streak: 0, startTs: 0, timerId: null };
+
+function updateLiveStatsUI() {
+  $('live-xp').textContent = '+' + sessionStats.xp;
+  $('live-gems').textContent = '+' + sessionStats.gems;
+  $('live-streak').textContent = '+' + sessionStats.streak;
+}
+
+function startElapsedTimer() {
+  sessionStats.startTs = Date.now();
+  if (sessionStats.timerId) clearInterval(sessionStats.timerId);
+  sessionStats.timerId = setInterval(() => {
+    const sec = Math.floor((Date.now() - sessionStats.startTs) / 1000);
+    const mm = String(Math.floor(sec / 60)).padStart(2, '0');
+    const ss = String(sec % 60).padStart(2, '0');
+    $('live-timer').textContent = `${mm}:${ss}`;
+  }, 1000);
+}
+
+function stopElapsedTimer() {
+  if (sessionStats.timerId) clearInterval(sessionStats.timerId);
+  sessionStats.timerId = null;
+}
+
+// Refresh Status & Profile
+async function refreshAll() {
+  try {
+    const s = await apiGet('/api/status');
+    currentProfile = s;
+    $('p-avatar').src = s.avatar || 'https://simg-ssl.duolingo.com/avatar/default_2/medium';
+    $('p-name').textContent = s.name || s.username;
+    $('p-user').textContent = `@${s.username} • ID ${s.sub}`;
+    $('p-course').textContent = `${(s.course.from || '').toUpperCase()} → ${(s.course.learning || '').toUpperCase()}`;
+
+    const privEl = $('p-privacy');
+    privEl.textContent = s.privacy || 'PUBLIC';
+    privEl.className = 'badge clickable ' + (s.privacy === 'PRIVATE' ? 'amber' : 'green');
+
+    const plusEl = $('p-plus');
+    plusEl.textContent = s.hasPlus ? 'SUPER / MAX' : 'FREE TIER';
+    plusEl.className = 'badge ' + (s.hasPlus ? 'purple' : 'sky');
+
+    $('p-age').textContent = s.creationDateIso ? `Dibuat: ${s.creationDateIso}` : 'Dibuat: -';
+
+    $('st-streak').textContent = `${s.streak.length} Hari`;
+    $('st-streak-sub').textContent = `${s.streak.doneToday ? '✅ Sudah Hari Ini' : '⚠️ Belum Hari Ini'} • Max ${s.streak.longest}`;
+    $('st-xp').textContent = Number(s.streak.totalXp || 0).toLocaleString('id-ID');
+    $('st-xp-sub').textContent = `${s.streak.zone} (${s.streak.today})`;
+    $('st-gems').textContent = Number(s.gems || 0).toLocaleString('id-ID');
+    $('st-gems-sub').textContent = `Pending: ${s.rewards.gemCount} chest (+${s.rewards.gemSum} gem)`;
+
+    const expDate = s.jwtExp ? new Date(s.jwtExp) : null;
+    const remDays = expDate ? Math.round((expDate.getTime() - Date.now()) / 86400000) : 0;
+    $('st-jwt').textContent = expDate ? `Aktif (${remDays}h)` : '-';
+    $('st-jwt-sub').textContent = expDate ? expDate.toISOString().slice(0, 10) : '-';
+
+    const vBadge = $('verify-badge');
+    if (s.alert) {
+      vBadge.textContent = 'ALERT';
+      vBadge.className = 'badge red';
+      $('alert-banner').style.display = 'block';
+      $('alert-banner').textContent = s.alert;
+    } else {
+      vBadge.textContent = 'HEALTHY';
+      vBadge.className = 'badge green';
+      $('alert-banner').style.display = 'none';
+    }
+  } catch (e) {
+    notify('Gagal memuat status: ' + e.message, 'err');
+  }
+}
+
+// Select Farming Option
+function selectFarmOpt(opt) {
+  selectedOpt = opt;
+  document.querySelectorAll('#farm-opt-grid .dh-opt').forEach(el => {
+    el.classList.toggle('active', el.dataset.opt === opt);
+  });
+  ['xp', 'gems', 'streak', 'league', 'quests', 'badges'].forEach(k => {
+    const box = $('sub-cfg-' + k);
+    if (box) box.style.display = k === opt ? 'flex' : 'none';
+  });
+}
+
+// Streaming NDJSON Action Runner
+async function runStreamingAction(path, body = {}) {
+  if (isRunning) return;
+  isRunning = true;
+  const btn = $('btn-start-stop');
+  btn.textContent = '⏹ STOP FARMING';
+  btn.classList.add('stop');
+  $('runner-state').textContent = 'RUNNING';
+  $('runner-state').className = 'badge amber';
+  startElapsedTimer();
+
+  const beforeXp = currentProfile?.streak?.totalXp || 0;
+  const beforeGems = currentProfile?.gems || 0;
+  const beforeStreak = currentProfile?.streak?.length || 0;
+
+  try {
+    const r = await fetch(path, {
+      method: 'POST',
+      headers: hdr({ 'content-type': 'application/json' }),
+      body: JSON.stringify(body),
+    });
+    if (!r.ok || !r.body) {
+      const errText = await r.text();
+      throw new Error(errText || ('HTTP ' + r.status));
+    }
+    const reader = r.body.getReader();
+    const dec = new TextDecoder();
+    let buf = '';
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, { stream: true });
+      let nl;
+      while ((nl = buf.indexOf('\n')) >= 0) {
+        const line = buf.slice(0, nl).trim();
+        buf = buf.slice(nl + 1);
+        if (!line) continue;
+        try {
+          const ev = JSON.parse(line);
+          if (ev.type === 'start') {
+            logConsole(`▶ Mulai [${ev.act}]`);
+          } else if (ev.type === 'log') {
+            logConsole(ev.msg);
+          } else if (ev.type === 'progress') {
+            if (ev.totalXp != null) sessionStats.xp = ev.totalXp;
+            if (ev.gainedStreak != null) sessionStats.streak = ev.gainedStreak;
+            updateLiveStatsUI();
+          } else if (ev.type === 'error') {
+            logConsole(`❌ ERROR: ${ev.error}`);
+            notify(ev.error, 'err');
+          } else if (ev.type === 'end') {
+            logConsole(`✅ Selesai (${(ev.ms / 1000).toFixed(1)}s)`);
+          }
+        } catch {}
+      }
+    }
+    await refreshAll();
+    if (currentProfile) {
+      sessionStats.xp = Math.max(sessionStats.xp, (currentProfile.streak?.totalXp || 0) - beforeXp);
+      sessionStats.gems = Math.max(sessionStats.gems, (currentProfile.gems || 0) - beforeGems);
+      sessionStats.streak = Math.max(sessionStats.streak, (currentProfile.streak?.length || 0) - beforeStreak);
+      updateLiveStatsUI();
+    }
+    celebrateConfetti();
+    notify('Aksi selesai!', 'ok');
+  } catch (e) {
+    logConsole('❌ Gagal: ' + e.message);
+    notify(e.message, 'err');
+  } finally {
+    isRunning = false;
+    stopElapsedTimer();
+    btn.textContent = '▶ START FARMING';
+    btn.classList.remove('stop');
+    $('runner-state').textContent = 'IDLE';
+    $('runner-state').className = 'badge green';
+  }
+}
+
+async function handleStartStop() {
+  if (isRunning) {
+    try {
+      await apiPost('/api/act/stop');
+      logConsole('⏹ Sinyal berhenti dikirim...');
+      notify('Menghentikan proses...', 'info');
+    } catch (e) {
+      notify(e.message, 'err');
+    }
+    return;
+  }
+
+  const delayMs = Number($('delay-slider').value) || 1500;
+
+  if (selectedOpt === 'xp') {
+    await runStreamingAction('/api/act/xp', {
+      mode: $('xp-mode').value,
+      count: Number($('xp-count').value) || 1,
+      targetXp: Number($('xp-target').value) || 0,
+      delayMs,
+    });
+  } else if (selectedOpt === 'gems') {
+    await runStreamingAction('/api/act/rewards/claim', {
+      maxClaims: Number($('gems-max').value) || 20,
+      all: $('gems-all').checked,
+    });
+  } else if (selectedOpt === 'streak') {
+    await runStreamingAction('/api/act/streak', {
+      mode: $('streak-mode').value,
+      days: Number($('streak-days').value) || 1,
+      delayMs,
+    });
+  } else if (selectedOpt === 'league') {
+    await runStreamingAction('/api/act/league/farm', {
+      mode: $('league-mode').value,
+      maxIterations: Number($('league-max').value) || 15,
+      delayMs,
+    });
+  } else if (selectedOpt === 'quests') {
+    const act = $('quest-action').value;
+    await runStreamingAction(act === 'send' ? '/api/act/quests/send' : '/api/act/quests/dry', {
+      all: $('quest-all-metrics').checked,
+      force: $('quest-force').checked,
+    });
+  } else if (selectedOpt === 'badges') {
+    await runStreamingAction('/api/act/badges/claim', {
+      monthYear: $('badge-month-inp').value.trim() || null,
+      skipOlderThanAccount: $('badge-skip-old').checked,
+      delayMs,
+    });
+  }
+}
+
+// Quick Actions
+async function quickBuy(itemName) {
+  await runStreamingAction('/api/act/buy', { item: itemName });
+}
+
+async function quickStreakKeeper() {
+  await runStreamingAction('/api/act/streak', { mode: 'keeper', days: 1 });
+}
+
+async function runVerifyNow() {
+  try {
+    logConsole('🛡️ Menjalankan Watchdog Verify...');
+    const rep = await apiGet('/api/verify');
+    logConsole(`Verify: ${rep.ok ? 'OK' : 'GAGAL'} | JWT sisa ${rep.remDays} hari`);
+    (rep.hostChecks || []).forEach(h => logConsole(`  Host ${h.host}: ${h.status || h.err} (${h.ms}ms)`));
+    if (rep.issues?.length) rep.issues.forEach(i => logConsole(`  ! ${i}`));
+    notify(rep.ok ? 'Watchdog Verify: OK!' : 'Watchdog menemukan masalah!', rep.ok ? 'ok' : 'err');
+    await refreshAll();
+  } catch (e) {
+    notify(e.message, 'err');
+  }
+}
+
+async function togglePrivacy() {
+  try {
+    const makePrivate = currentProfile?.privacy !== 'PRIVATE';
+    const r = await apiPost('/api/act/privacy', { makePrivate });
+    notify(`Privasi akun diubah menjadi ${r.status}`, 'ok');
+    await refreshAll();
+  } catch (e) {
+    notify(e.message, 'err');
+  }
+}
+
+async function loadServerLog() {
+  try {
+    const d = await apiGet('/api/log');
+    $('console-out').textContent = d.log || '(duo.log kosong)';
+    $('console-out').scrollTop = $('console-out').scrollHeight;
+  } catch (e) {
+    notify(e.message, 'err');
+  }
+}
+
+// Modals Control
+function openModal(id) { $(id).classList.add('open'); }
+function closeModal(id) { $(id).classList.remove('open'); }
+
+// ── MODAL 1: SHOP ──
+let shopCatalog = [];
+let activeShopCat = 'ALL';
+
+async function loadShopModal() {
+  try {
+    $('shop-list').innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-sub)">Memuat katalog shop Duolingo...</div>';
+    const d = await apiGet('/api/shop');
+    shopCatalog = d.items || [];
+    renderShopList();
+  } catch (e) {
+    $('shop-list').innerHTML = `<div style="color:var(--danger)">Gagal memuat shop: ${e.message}</div>`;
+  }
+}
+
+function setShopCat(cat, btn) {
+  activeShopCat = cat;
+  document.querySelectorAll('#shop-cat-pills .filter-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderShopList();
+}
+
+function renderShopList() {
+  const q = ($('shop-search').value || '').toLowerCase().trim();
+  const filtered = shopCatalog.filter(it => {
+    if (activeShopCat !== 'ALL' && it.category !== activeShopCat) return false;
+    if (!q) return true;
+    return (
+      String(it.name || '').toLowerCase().includes(q) ||
+      String(it.id || '').toLowerCase().includes(q) ||
+      String(it.category || '').toLowerCase().includes(q)
+    );
+  });
+
+  if (!filtered.length) {
+    $('shop-list').innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-sub)">Tidak ada item yang cocok.</div>';
+    return;
+  }
+
+  $('shop-list').innerHTML = filtered.map(it => `
+    <div class="item-card">
+      <div class="item-left">
+        <img class="item-icon" src="${it.icon}" alt="">
+        <div>
+          <div style="font-weight:900;font-size:14px;">${it.name} <span class="badge sky">${it.category}</span></div>
+          <div class="mono" style="font-size:11px;color:var(--text-sub);margin-top:2px;">ID: ${it.id} • Harga Normal: ${it.price ?? 0} ${it.currencyType || ''}</div>
+        </div>
+      </div>
+      <button class="btn-sm green" onclick="closeModal('modal-shop'); quickBuy('${it.id}')">GET FREE</button>
+    </div>
+  `).join('');
+}
+
+// ── MODAL 2: QUESTS & MONTHLY BADGES ──
+let questsCatalog = [];
+let activeQuestCat = 'MONTHLY';
+
+async function loadQuestsModal() {
+  try {
+    $('quests-list').innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-sub)">Memuat schema & progress goals-api...</div>';
+    const d = await apiGet('/api/badges');
+    questsCatalog = d.items || [];
+    renderQuestsList();
+  } catch (e) {
+    $('quests-list').innerHTML = `<div style="color:var(--danger)">Gagal memuat quests: ${e.message}</div>`;
+  }
+}
+
+function setQuestCat(cat, btn) {
+  activeQuestCat = cat;
+  btn.parentElement.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderQuestsList();
+}
+
+function renderQuestsList() {
+  const hideDone = $('q-hide-done').checked;
+  const safeOnly = $('q-safe-only').checked;
+
+  const list = questsCatalog.filter(it => {
+    if (activeQuestCat !== 'ALL' && it.category !== activeQuestCat) return false;
+    if (hideDone && it.done) return false;
+    if (safeOnly && !it.safeMetric) return false;
+    return true;
+  });
+
+  if (!list.length) {
+    $('quests-list').innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-sub)">Tidak ada quest/badge untuk filter ini.</div>';
+    return;
+  }
+
+  $('quests-list').innerHTML = list.slice(0, 120).map(it => {
+    const pct = it.threshold > 0 ? Math.min(100, Math.round((it.progress / it.threshold) * 100)) : 0;
+    return `
+      <div class="item-card ${it.done ? 'done' : ''}">
+        <div class="item-left">
+          <img class="item-icon" src="${it.iconUrl}" alt="" onerror="this.src='https://d35aaqx5ub95lt.cloudfront.net/images/goals/2b5a211d830a24fab92e291d50f65d1d.svg'">
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+              <span style="font-weight:900;font-size:14px;">${it.title}</span>
+              <span class="badge ${it.done ? 'green' : 'sky'}">${it.progress}/${it.threshold}</span>
+              ${it.activeToday ? '<span class="badge green">ACTIVE TODAY</span>' : ''}
+              ${it.olderThanAccount ? '<span class="badge red" title="Quest ini lebih tua dari tanggal pembuatan akun Anda!">⚠️ &gt;Umur Akun</span>' : ''}
+            </div>
+            <div class="mono" style="font-size:11px;color:var(--text-sub);margin-top:2px;">${it.goalId} • Metric: ${it.metric}</div>
+            <div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;flex-shrink:0;">
+          <button class="btn-sm outline" onclick="stepSingleGoal('${it.goalId}','${it.metric}',1)">+1</button>
+          <button class="btn-sm outline" onclick="stepSingleGoal('${it.goalId}','${it.metric}',10)">+10</button>
+          <button class="btn-sm green" onclick="stepSingleGoal('${it.goalId}','${it.metric}',${Math.max(1, it.delta || it.threshold || 30)})">Claim</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function stepSingleGoal(goalId, metric, quantity) {
+  try {
+    notify(`Mengirim +${quantity} ${metric} untuk ${goalId}...`, 'info');
+    await apiPost('/api/act/quests/single', { goalId, metric, quantity });
+    notify(`Berhasil update ${goalId} (+${quantity})!`, 'ok');
+    celebrateConfetti();
+    await loadQuestsModal();
+  } catch (e) {
+    notify(e.message, 'err');
+  }
+}
+
+async function claimAllMonthlyFromModal() {
+  closeModal('modal-quests');
+  selectFarmOpt('badges');
+  $('badge-month-inp').value = '';
+  $('badge-skip-old').checked = true;
+  await handleStartStop();
+}
+
+// ── MODAL 3: LEADERBOARD ──
+async function loadLeagueModal() {
+  try {
+    $('league-list').innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-sub)">Memuat papan peringkat...</div>';
+    const lb = await apiGet('/api/league');
+    if (!lb.active) {
+      $('league-summary').textContent = lb.tierName;
+      $('league-list').innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-sub)">Akun belum masuk cohort liga minggu ini.</div>';
+      return;
+    }
+    $('league-summary').innerHTML =
+      `<span class="badge purple">${lb.tierName}</span> ` +
+      `Posisi Kamu: <b>#${lb.myRank || '-'}</b> (${lb.myScore} XP) • ` +
+      `Selisih ke #1: <b>${lb.xpToFirst} XP</b> • ` +
+      `<span class="badge amber" title="Rekomendasi batas aman dari rata-rata Top 5">Safe Limit: ~${lb.recommendedXpLimit} XP</span>`;
+
+    $('league-list').innerHTML = (lb.rankings || []).map(r => {
+      const medal = r.rank === 1 ? '🥇' : r.rank === 2 ? '🥈' : r.rank === 3 ? '🥉' : `#${r.rank}`;
+      return `
+        <div class="item-card ${r.isMe ? 'done' : ''}">
+          <div class="item-left">
+            <div style="width:36px;font-weight:900;font-size:15px;text-align:center;">${medal}</div>
+            <img class="item-icon" style="border-radius:50%" src="${r.avatarUrl}" alt="">
+            <div>
+              <div style="font-weight:900;font-size:14px;">${r.displayName} ${r.isMe ? '<span class="badge green">KAMU</span>' : ''} ${r.hasPlus ? '<span class="badge purple">PLUS</span>' : ''}</div>
+              <div class="mono" style="font-size:11px;color:var(--text-sub);">ID: ${r.userId}</div>
+            </div>
+          </div>
+          <div class="mono" style="font-weight:900;font-size:15px;color:var(--accent);">${r.score.toLocaleString('id-ID')} XP</div>
+        </div>
+      `;
+    }).join('');
+  } catch (e) {
+    $('league-list').innerHTML = `<div style="color:var(--danger)">Gagal memuat leaderboard: ${e.message}</div>`;
+  }
+}
+
+// ── MODAL 4: DUOME ACTIVITY ──
+let lastDuomeData = null;
+
+function fillMyDuomeId() {
+  if (currentProfile?.sub) $('duome-uid').value = currentProfile.sub;
+}
+
+async function fetchDuome() {
+  const uid = $('duome-uid').value.trim() || currentProfile?.sub;
+  if (!uid) return notify('Masukkan User ID terlebih dahulu', 'err');
+  try {
+    $('duome-out').innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-sub)">Mengambil riwayat kalender dari Duome.eu...</div>';
+    lastDuomeData = await apiGet('/api/duome?userId=' + encodeURIComponent(uid));
+    renderDuomeView();
+  } catch (e) {
+    $('duome-out').innerHTML = `<div style="color:var(--danger)">Gagal mengambil Duome: ${e.message}</div>`;
+  }
+}
+
+function renderDuomeView() {
+  if (!lastDuomeData) return;
+  if ($('duome-raw').checked) {
+    $('duome-out').innerHTML = `<pre class="console-box" style="height:380px">${JSON.stringify(lastDuomeData.raw, null, 2)}</pre>`;
+    return;
+  }
+  const evs = lastDuomeData.events || [];
+  if (!evs.length) {
+    $('duome-out').innerHTML = `<div style="padding:20px;text-align:center;color:var(--text-sub)">${lastDuomeData.note || 'Tidak ada event kalender publik di Duome.'}</div>`;
+    return;
+  }
+  $('duome-out').innerHTML =
+    `<div style="margin-bottom:8px;font-size:12px;font-weight:800;color:var(--text-sub)">Total ${evs.length} sesi tercatat (${lastDuomeData.totalXpLogged} XP)</div>` +
+    evs.map(e => `
+      <div class="item-card">
+        <div class="mono" style="font-size:12px;">${new Date(e.datetime).toLocaleString('id-ID')}</div>
+        <span class="badge green">+${e.improvement} XP</span>
+      </div>
+    `).join('');
+}
+
+// ── MODAL 5: ACCOUNTS & SUPERLINK ──
+async function checkSuperlinkNow() {
+  const input = $('superlink-inp').value.trim();
+  if (!input) return notify('Masukkan link atau kode Superlink', 'err');
+  try {
+    $('superlink-res').textContent = 'Mengecek ke server Duolingo...';
+    const r = await apiPost('/api/superlink', { input });
+    if (r.valid) {
+      $('superlink-res').innerHTML = `<span style="color:var(--green)">✅ VALID! Inviter: ${r.inviter} (@${r.username || '-'}) • Kode: ${r.id}</span>`;
+    } else {
+      $('superlink-res').innerHTML = `<span style="color:var(--danger)">❌ INVALID / EXPIRED (${r.id}): ${r.reason}</span>`;
+    }
+  } catch (e) {
+    $('superlink-res').innerHTML = `<span style="color:var(--danger)">Error: ${e.message}</span>`;
+  }
+}
+
+async function loadAccountsModal() {
+  try {
+    const d = await apiGet('/api/accounts');
+    renderAccountsList(d.accounts || []);
+  } catch (e) {
+    $('accounts-list').innerHTML = `<div style="color:var(--danger)">${e.message}</div>`;
+  }
+}
+
+function renderAccountsList(accounts) {
+  if (!accounts.length) {
+    $('accounts-list').innerHTML = '<div style="padding:14px;text-align:center;color:var(--text-sub)">Belum ada snapshot akun tersimpan. Klik "+ Simpan Akun Aktif".</div>';
+    return;
+  }
+  $('accounts-list').innerHTML = accounts.map(a => `
+    <div class="item-card ${a.active ? 'done' : ''}">
+      <div class="item-left">
+        <img class="item-icon" style="border-radius:50%" src="${a.picture || 'https://simg-ssl.duolingo.com/avatar/default_2/medium'}" alt="">
+        <div>
+          <div style="font-weight:900;font-size:14px;">${a.username} ${a.active ? '<span class="badge green">ACTIVE</span>' : ''}</div>
+          <div class="mono" style="font-size:11px;color:var(--text-sub);">ID: ${a.sub} • 🔥 ${a.streak} • ⚡ ${a.totalXp} XP • 💎 ${a.gems}</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;">
+        ${!a.active ? `<button class="btn-sm" onclick="switchAccount('${a.sub}')">Switch</button>` : ''}
+        <button class="btn-sm outline" onclick="deleteAccount('${a.sub}')">Hapus</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function saveCurrentAccount() {
+  try {
+    const d = await apiPost('/api/accounts/save');
+    renderAccountsList(d.accounts || []);
+    notify('Snapshot akun aktif disimpan!', 'ok');
+  } catch (e) {
+    notify(e.message, 'err');
+  }
+}
+
+async function switchAccount(sub) {
+  try {
+    await apiPost('/api/accounts/switch', { sub });
+    notify('Berhasil beralih akun!', 'ok');
+    await loadAccountsModal();
+    await refreshAll();
+  } catch (e) {
+    notify(e.message, 'err');
+  }
+}
+
+async function deleteAccount(sub) {
+  try {
+    const d = await apiPost('/api/accounts/delete', { sub });
+    renderAccountsList(d.accounts || []);
+    notify('Snapshot akun dihapus.', 'info');
+  } catch (e) {
+    notify(e.message, 'err');
+  }
+}
+
+// ── MODAL 6: CHESS BOT & INTERACTIVE BOARD ANALYZER ──
+const CHESS_GLYPHS = {
+  K: '♔', Q: '♕', R: '♖', B: '♗', N: '♘', P: '♙',
+  k: '♚', q: '♛', r: '♜', b: '♝', n: '♞', p: '♟',
+};
+let chessState = {
+  fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+  flipped: false,
+  selectedSq: null,
+  board: [],
+  legalMoves: [],
+  bestMove: null,
+  topMoves: [],
+};
+
+async function initChessBoard() {
+  await analyzeCurrentFen();
+}
+
+function flipChessBoard() {
+  chessState.flipped = !chessState.flipped;
+  renderChessBoardUI();
+}
+
+async function resetChessBoard() {
+  $('chess-fen-inp').value = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+  chessState.selectedSq = null;
+  await analyzeCurrentFen();
+}
+
+async function analyzeCurrentFen() {
+  const fen = ($('chess-fen-inp').value || '').trim() || 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+  try {
+    $('chess-best-move').textContent = 'Menganalisis...';
+    const d = await apiPost('/api/chess/analyze', {
+      fen,
+      depth: 12,
+      useCloud: $('chess-use-cloud').checked,
+    });
+    applyChessAnalysisResponse(d);
+  } catch (e) {
+    notify('Gagal analisis catur: ' + e.message, 'err');
+  }
+}
+
+function applyChessAnalysisResponse(d) {
+  chessState.fen = d.fen;
+  chessState.board = d.board || [];
+  chessState.legalMoves = d.legalMoves || [];
+  chessState.bestMove = d.bestMove || null;
+  chessState.topMoves = d.topMoves || [];
+  chessState.selectedSq = null;
+  $('chess-fen-inp').value = d.fen;
+
+  $('chess-engine-badge').textContent = d.source || 'Engine';
+  if (d.gameOver) {
+    $('chess-best-move').textContent = d.result === 'checkmate' ? '🏁 SKAKMAT!' : '🤝 REMIS (STALEMATE)';
+    $('chess-eval-text').textContent = `Permainan Selesai (${d.result})`;
+  } else if (d.bestMove) {
+    $('chess-best-move').textContent = `${d.bestMove.from.toUpperCase()} → ${d.bestMove.to.toUpperCase()} (${d.bestMove.san || d.bestMove.uci})`;
+    const evalStr = d.bestMove.evalPawns != null ? (d.bestMove.evalPawns >= 0 ? `+${d.bestMove.evalPawns}` : `${d.bestMove.evalPawns}`) : '0.00';
+    $('chess-eval-text').textContent = `Giliran: ${d.turn === 'w' ? 'Putih (White)' : 'Hitam (Black)'} • Eval: ${evalStr} ${d.inCheck ? '• ⚠️ SKAK!' : ''}`;
+  } else {
+    $('chess-best-move').textContent = '-';
+  }
+
+  renderChessBoardUI();
+  renderChessTopMovesUI();
+}
+
+function renderChessBoardUI() {
+  const grid = $('chess-grid');
+  const svg = $('chess-svg');
+  if (!grid || !chessState.board.length) return;
+
+  const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+  const legalFromSelected = chessState.selectedSq
+    ? new Set(chessState.legalMoves.filter(m => m.from === chessState.selectedSq).map(m => m.to))
+    : new Set();
+
+  let html = '';
+  for (let rIdx = 0; rIdx < 8; rIdx++) {
+    const r = chessState.flipped ? 7 - rIdx : rIdx;
+    for (let cIdx = 0; cIdx < 8; cIdx++) {
+      const c = chessState.flipped ? 7 - cIdx : cIdx;
+      const sq = files[c] + (8 - r);
+      const isLight = (r + c) % 2 === 0;
+      const piece = chessState.board[r]?.[c] || null;
+      const glyph = piece ? (CHESS_GLYPHS[piece] || '') : '';
+      const isSel = chessState.selectedSq === sq;
+      const isDest = legalFromSelected.has(sq);
+      const isBestFrom = chessState.bestMove?.from === sq;
+      const isBestTo = chessState.bestMove?.to === sq;
+
+      const classes = [
+        'c-sq',
+        isLight ? 'light' : 'dark',
+        isSel ? 'selected' : '',
+        isDest ? 'legal-dest' : '',
+        isBestFrom ? 'best-from' : '',
+        isBestTo ? 'best-to' : '',
+      ].filter(Boolean).join(' ');
+
+      const rankLbl = cIdx === 0 ? `<span class="c-coord rank">${8 - r}</span>` : '';
+      const fileLbl = rIdx === 7 ? `<span class="c-coord file">${files[c]}</span>` : '';
+
+      html += `<div class="${classes}" onclick="onClickChessSquare('${sq}')">${rankLbl}${glyph}${fileLbl}</div>`;
+    }
+  }
+  grid.innerHTML = html;
+
+  // Draw SVG Arrow for Best Move
+  if (chessState.bestMove) {
+    const sqToPct = sq => {
+      const f = sq.charCodeAt(0) - 97;
+      const rank = parseInt(sq[1], 10);
+      const col = chessState.flipped ? 7 - f : f;
+      const row = chessState.flipped ? rank - 1 : 8 - rank;
+      return { x: (col + 0.5) * 12.5, y: (row + 0.5) * 12.5 };
+    };
+    const p1 = sqToPct(chessState.bestMove.from);
+    const p2 = sqToPct(chessState.bestMove.to);
+    svg.innerHTML = `
+      <defs>
+        <marker id="c-arr" markerWidth="4.5" markerHeight="4.5" refX="2.8" refY="2.25" orient="auto">
+          <polygon points="0 0, 4.5 2.25, 0 4.5" fill="#58cc02" />
+        </marker>
+      </defs>
+      <line x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}"
+            stroke="#58cc02" stroke-width="2.3" stroke-linecap="round"
+            marker-end="url(#c-arr)" opacity="0.92" />
+    `;
+  } else {
+    svg.innerHTML = '';
+  }
+}
+
+function renderChessTopMovesUI() {
+  const box = $('chess-top-moves');
+  if (!chessState.topMoves.length) {
+    box.innerHTML = '<div style="padding:10px;text-align:center;color:var(--text-sub)">Tidak ada langkah legal.</div>';
+    return;
+  }
+  box.innerHTML = chessState.topMoves.map((m, idx) => {
+    const score = m.evalPawns != null ? (m.evalPawns >= 0 ? `+${m.evalPawns}` : `${m.evalPawns}`) : '0.00';
+    return `
+      <div class="item-card ${idx === 0 ? 'done' : ''}" style="padding:8px 12px;cursor:pointer;" onclick="executeChessMove('${m.from}','${m.to}','${m.promotion || 'q'}')">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="badge ${idx === 0 ? 'green' : 'sky'}">#${idx + 1}</span>
+          <span class="mono" style="font-weight:900;font-size:14px;">${m.from.toUpperCase()} → ${m.to.toUpperCase()} (${m.san || m.uci})</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="mono" style="font-size:12px;color:var(--accent);font-weight:900;">Eval ${score}</span>
+          <button class="btn-sm ${idx === 0 ? 'green' : 'outline'}" style="padding:4px 9px;font-size:11px;">Jalan</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function onClickChessSquare(sq) {
+  if (chessState.selectedSq) {
+    const move = chessState.legalMoves.find(m => m.from === chessState.selectedSq && m.to === sq);
+    if (move) {
+      await executeChessMove(move.from, move.to, move.promotion || 'q');
+      return;
+    }
+  }
+  const hasMovesFromSq = chessState.legalMoves.some(m => m.from === sq);
+  chessState.selectedSq = hasMovesFromSq ? sq : null;
+  renderChessBoardUI();
+}
+
+async function executeChessMove(from, to, promotion = 'q') {
+  try {
+    const d = await apiPost('/api/chess/move', {
+      fen: chessState.fen,
+      from,
+      to,
+      promotion,
+      vsBot: $('chess-vs-oscar').checked,
+      useCloud: $('chess-use-cloud').checked,
+      depth: 12,
+    });
+    if (d.botMove) {
+      notify(`Kamu: ${d.playedMove.san} | Oscar membalas: ${d.botMove.san}`, 'ok');
+    } else {
+      notify(`Langkah dijalankan: ${d.playedMove.san}`, 'ok');
+    }
+    applyChessAnalysisResponse(d);
+  } catch (e) {
+    notify(e.message, 'err');
+  }
+}
+
+async function playRecommendedChessMove() {
+  if (!chessState.bestMove) {
+    await analyzeCurrentFen();
+  }
+  if (!chessState.bestMove) return notify('Tidak ada langkah rekomendasi.', 'err');
+  await executeChessMove(
+    chessState.bestMove.from,
+    chessState.bestMove.to,
+    chessState.bestMove.promotion || 'q',
+  );
+}
+
+// ── MODAL 7: REWARD CHESTS EXPLORER ──
+async function loadRewardsModal() {
+  try {
+    $('rewards-list').innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-sub)">Memuat daftar peti reward...</div>';
+    const d = await apiGet('/api/rewards');
+    const list = d.rewards || [];
+    const gemList = list.filter(r => r.currency === 'GEMS' && Number(r.amount) > 0);
+    const totalGems = gemList.reduce((s, r) => s + Number(r.amount || 0), 0);
+    $('rewards-summary').innerHTML =
+      `Total Unclaimed: <b>${list.length} item</b> • ` +
+      `<span class="badge green">${gemList.length} Peti Gems (+${totalGems} 💎)</span>`;
+
+    if (!list.length) {
+      $('rewards-list').innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-sub)">Tidak ada peti reward yang belum diklaim.</div>';
+      return;
+    }
+
+    $('rewards-list').innerHTML = list.slice(0, 80).map(r => {
+      const isGem = r.currency === 'GEMS' && Number(r.amount) > 0;
+      return `
+        <div class="item-card">
+          <div class="item-left">
+            <div style="font-size:24px;width:40px;text-align:center;">${isGem ? '💎' : '🎁'}</div>
+            <div>
+              <div style="font-weight:900;font-size:14px;">
+                ${r.bundleType || r.rewardType || 'REWARD_CHEST'}
+                <span class="badge ${isGem ? 'green' : 'sky'}">${r.amount ? `+${r.amount} ${r.currency || 'GEMS'}` : (r.itemType || 'ITEM')}</span>
+              </div>
+              <div class="mono" style="font-size:11px;color:var(--text-sub);">ID: ${r.id}</div>
+            </div>
+          </div>
+          <button class="btn-sm green" onclick="claimSingleReward('${r.id}')">Klaim Peti</button>
+        </div>
+      `;
+    }).join('');
+  } catch (e) {
+    $('rewards-list').innerHTML = `<div style="color:var(--danger)">${e.message}</div>`;
+  }
+}
+
+async function claimSingleReward(id) {
+  try {
+    notify(`Mengklaim peti ${id}...`, 'info');
+    const r = await apiPost('/api/act/rewards/claim-one', { id });
+    notify(`Peti diklaim! Gems: ${r.beforeGems} → ${r.afterGems} (+${r.deltaGems} 💎)`, 'ok');
+    celebrateConfetti();
+    await loadRewardsModal();
+    await refreshAll();
+  } catch (e) {
+    notify('Gagal klaim peti: ' + e.message, 'err');
+  }
+}
+
+// ── MODAL 8: COURSE SWITCHER ──
+function renderCourseModal() {
+  const courses = currentProfile?.courses || [];
+  const activeFrom = currentProfile?.course?.from;
+  const activeLearn = currentProfile?.course?.learning;
+  $('course-from-inp').value = activeFrom || 'id';
+  $('course-learn-inp').value = activeLearn || 'ja';
+
+  if (!courses.length) {
+    $('course-list').innerHTML = '<div style="padding:14px;text-align:center;color:var(--text-sub)">Gunakan input di atas untuk mengganti pasangan bahasa.</div>';
+    return;
+  }
+
+  $('course-list').innerHTML = courses.map(c => {
+    const isAct = c.fromLanguage === activeFrom && c.learningLanguage === activeLearn;
+    return `
+      <div class="item-card ${isAct ? 'done' : ''}">
+        <div>
+          <div style="font-weight:900;font-size:14px;">
+            ${c.title || `${c.fromLanguage.toUpperCase()} → ${c.learningLanguage.toUpperCase()}`}
+            <span class="badge ${isAct ? 'green' : 'sky'}">${c.fromLanguage.toUpperCase()} → ${c.learningLanguage.toUpperCase()}</span>
+          </div>
+          <div class="mono" style="font-size:11px;color:var(--text-sub);">XP Course: ${(c.xp || 0).toLocaleString('id-ID')} XP</div>
+        </div>
+        <button class="btn-sm ${isAct ? 'outline' : 'green'}" onclick="switchCoursePair('${c.fromLanguage}','${c.learningLanguage}')">
+          ${isAct ? 'Aktif' : 'Pilih Course'}
+        </button>
+      </div>
+    `;
+  }).join('');
+}
+
+async function switchCoursePair(fromLanguage, learningLanguage) {
+  try {
+    await apiPost('/api/act/course', { fromLanguage, learningLanguage });
+    notify(`Course aktif diubah ke ${fromLanguage.toUpperCase()} → ${learningLanguage.toUpperCase()}!`, 'ok');
+    closeModal('modal-course');
+    await refreshAll();
+  } catch (e) {
+    notify('Gagal mengubah course: ' + e.message, 'err');
+  }
+}
+
+async function switchCourseCustom() {
+  const from = $('course-from-inp').value.trim();
+  const learn = $('course-learn-inp').value.trim();
+  if (!from || !learn) return notify('Isi kode bahasa From dan Learning', 'err');
+  await switchCoursePair(from, learn);
+}
+
+// Initial Load
+refreshAll();
+</script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{
+  "name": "duohacker-pro",
+  "version": "4.2.0",
+  "description": "Self-Hosted Duolingo Automation Suite: Streak Keeper, XP/Gems/Streak/Quest Farmer, Leaderboard Tracker, Chess Bot, Web Dashboard & Tampermonkey Companion Userscript (Zero External Dependencies)",
+  "author": "Dzakiudin (jakijekiiii) <dzakiudin07@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Dzakiudin/duohacker-pro.git"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "node ui.mjs",
+    "dashboard": "node ui.mjs",
+    "streak": "node autoserver.mjs",
+    "status": "node autoserver.mjs --status",
+    "verify": "node autoserver.mjs --verify",
+    "quests:dry": "node autoserver.mjs --quests --dry",
+    "quests:send": "node autoserver.mjs --quests --send",
+    "badges": "node autoserver.mjs --badges",
+    "shop": "node autoserver.mjs --shop",
+    "league": "node autoserver.mjs --league",
+    "check": "node --check duo-core.mjs && node --check gems.mjs && node --check autoserver.mjs && node --check ui.mjs && node --check userscript/duohacker-pro.user.js"
+  }
+}

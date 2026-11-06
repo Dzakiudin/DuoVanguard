@@ -1,0 +1,13 @@
+# Live Credentials & State (NEVER COMMIT)
+duo.config.json
+duo.config.state.json
+
+# Runtime Logs & Alerts
+duo.log
+duo.alert
+*.log
+
+# Node & OS Artifacts
+node_modules/
+.DS_Store
+Thumbs.db
