@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         Duolingo DuoHacker + PRO v4.2 (Auto-Solver + Chess Bot + Max)
+// @name         DuoVanguard Companion v4.2 (Auto-Solver + Chess Bot + Max)
 // @namespace    http://127.0.0.1:8791/
 // @version      4.2.0
 // @description  Unified In-Browser Companion: Full React 18 Fiber + Redux Direct Auto-Solver (Lessons, Stories, Kanji Strokes, Cloze, Tables), Live Chess Bot vs Oscar/PvP (Best Move Arrow + Auto-Move + Instant Win), Fake Duolingo Max, & Local Dashboard Bridge.
-// @author       JakiJekii (Merged from DuoHacker v2.6 & Duolingo PRO 3.1 + Redux Engine)
+// @author       Dzakiudin (jakijekiiii)
 // @match        https://*.duolingo.com/*
 // @match        https://*.duolingo.cn/*
 // @run-at       document-start
@@ -17,7 +17,7 @@
     return;
   }
 
-  const STORAGE_KEY = 'duohacker_pro_companion_cfg_v41';
+  const STORAGE_KEY = 'duovanguard_companion_cfg_v42';
   const defaultCfg = {
     fakeMax: false,
     autoSolveAll: false,
@@ -94,8 +94,8 @@
   }
 
   function installMaxInterceptor() {
-    if (window.__duohackerMaxHooked) return;
-    window.__duohackerMaxHooked = true;
+    if (window.__duoVanguardMaxHooked) return;
+    window.__duoVanguardMaxHooked = true;
 
     const origFetch = window.fetch.bind(window);
     window.fetch = async function (...args) {
@@ -1052,7 +1052,7 @@
         btn2.click();
       }
     } catch (e) {
-      console.warn('[DuoHacker PRO] Solve error:', e);
+      console.warn('[DuoVanguard] Solve error:', e);
     } finally {
       isSolvingStep = false;
     }
@@ -1291,7 +1291,7 @@
         const ld = await localRes.json();
         if (ld && ld.ok && ld.bestMove) {
           return {
-            source: ld.source || 'DuoHacker Engine',
+            source: ld.source || 'DuoVanguard Engine',
             from: ld.bestMove.from,
             to: ld.bestMove.to,
             promotion: ld.bestMove.promotion || 'q',
@@ -1816,11 +1816,11 @@
           border-top: 1px solid rgba(255,255,255,0.1);
         }
       </style>
-      <div id="dh-pro-fab" title="DuoHacker + PRO v4.2 (Solver + Chess Bot)">🦉</div>
+      <div id="dh-pro-fab" title="DuoVanguard Companion v4.2 (Solver + Chess Bot)">🦉</div>
       <div id="dh-pro-panel">
         <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:8px;margin-bottom:8px;">
           <div>
-            <div style="font-weight:900;font-size:15px;color:#38bdf8;">DuoHacker PRO v4.2</div>
+            <div style="font-weight:900;font-size:15px;color:#38bdf8;">DuoVanguard v4.2</div>
             <div style="font-size:11px;color:#94a3b8;">Redux + DOM Solver • Chess Bot • Max</div>
           </div>
           <div style="text-align:right;">

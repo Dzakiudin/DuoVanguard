@@ -1,6 +1,6 @@
-# 🦉 DuoHacker + PRO v4.2 — Self-Hosted Duolingo Suite
+# 🦉 DuoVanguard v4.2 — Autonomous Duolingo Suite
 
-Suite otomasi Duolingo **self-hosted** berbasis **Node.js ESM murni (Zero External Dependencies)** tanpa memerlukan Docker, VPS, atau paket `npm` pihak ketiga. Menggabungkan **Streak Keeper otomatis**, **Local Web Dashboard (`127.0.0.1:8791`)**, **CLI Runner**, serta **In-Browser Companion Userscript v4.2** (React 18 + Redux Direct Auto-Solver, Live Chess Bot vs Oscar/PvP, & Fake Duolingo Max).
+**DuoVanguard** adalah suite otomasi Duolingo **self-hosted** terlengkap dan orisinal berbasis **Node.js ESM murni (Zero External Dependencies)** tanpa memerlukan Docker, VPS, atau paket `npm` pihak ketiga. Menggabungkan **Streak Guardian otomatis**, **Local Web Dashboard (`127.0.0.1:8791`)**, **CLI Runner**, serta **In-Browser Companion Userscript v4.2** (React 18 + Redux Direct Auto-Solver, Real-Time Chess Bot vs Oscar/PvP, & Fake Duolingo Max).
 
 ---
 
@@ -14,7 +14,7 @@ flowchart TD
         CLI["autoserver.mjs (CLI & Task Scheduler)"]
         HTTP["ui.mjs (HTTP + NDJSON Streaming Server)"]
         SPA["src/web/dashboard.html (Local Web Dashboard)"]
-        US["userscript/duohacker-pro.user.js (Tampermonkey v4.2)"]
+        US["userscript/duovanguard.user.js (Tampermonkey v4.2)"]
     end
 
     subgraph Facade["2. Public Facade Layer"]
@@ -46,7 +46,7 @@ flowchart TD
 
 ### Struktur Direktori
 ```text
-duohacker-pro/
+DuoVanguard/
 ├── src/
 │   ├── core/
 │   │   ├── client.mjs              # HTTP client + failover (www -> android-api) & parser JWT
@@ -61,7 +61,7 @@ duohacker-pro/
 │   └── web/
 │       └── dashboard.html          # Single-Page Application (SPA) Dashboard UI
 ├── userscript/
-│   └── duohacker-pro.user.js       # Tampermonkey Companion v4.2 (Auto-Solver + Chess Bot + Max)
+│   └── duovanguard.user.js         # Tampermonkey Companion v4.2 (Auto-Solver + Chess Bot + Max)
 ├── docs/
 │   ├── HANDOFF.md                  # Catatan serah-terima & status operasional
 │   └── re-findings.md              # Dokumentasi kontrak API & hasil Reverse Engineering
@@ -147,7 +147,7 @@ Buka **`http://127.0.0.1:8791`** di browser Anda.
 ## 🧩 Memasang Companion Userscript v4.2 di Browser (`duolingo.com`)
 
 Saat server dashboard (`node ui.mjs`) aktif, pasang ekstensi **Tampermonkey** di browser Anda lalu buka URL berikut:
-- **`http://127.0.0.1:8791/duohacker-pro.user.js`**
+- **`http://127.0.0.1:8791/duovanguard.user.js`**
 
 Klik **Install / Update**, lalu buka atau refresh `https://www.duolingo.com`.
 

@@ -1,6 +1,6 @@
 // language: JavaScript (Node 18+ ESM), file: ui.mjs
 // Unified Self-Hosted HTTP + Streaming NDJSON Server (127.0.0.1:8791)
-// Menyajikan dashboard SPA (src/web/dashboard.html), companion userscript (/duohacker-pro.user.js),
+// Menyajikan dashboard SPA (src/web/dashboard.html), companion userscript (/duovanguard.user.js),
 // dan seluruh endpoint API lokal dengan proteksi token x-duo-token.
 
 import http from 'node:http';
@@ -70,7 +70,7 @@ if (!process.env.DUO_UI_TOKEN && initialState.uiToken !== TOKEN) {
 }
 
 const HTML_PATH = path.join(__dirname, 'src', 'web', 'dashboard.html');
-const USERSCRIPT_PATH = path.join(__dirname, 'userscript', 'duohacker-pro.user.js');
+const USERSCRIPT_PATH = path.join(__dirname, 'userscript', 'duovanguard.user.js');
 
 let cachedCourse = null;
 let cachedCreationTs = null;
@@ -178,7 +178,7 @@ const server = http.createServer(async (req, res) => {
       return res.end(html);
     }
 
-    if (req.method === 'GET' && p === '/duohacker-pro.user.js') {
+    if (req.method === 'GET' && (p === '/duovanguard.user.js' || p === '/duohacker-pro.user.js')) {
       const js = fs.readFileSync(USERSCRIPT_PATH, 'utf8');
       res.writeHead(200, {
         'content-type': 'application/javascript; charset=utf-8',
@@ -676,6 +676,6 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(PORT, HOST, () => {
   console.log(`ui     : http://${HOST}:${PORT}/?t=${TOKEN}`);
-  console.log(`script : http://${HOST}:${PORT}/duohacker-pro.user.js`);
+  console.log(`script : http://${HOST}:${PORT}/duovanguard.user.js`);
   console.log(`token  : ${TOKEN}`);
 });

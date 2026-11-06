@@ -1,12 +1,12 @@
 {
-  "name": "duohacker-pro",
+  "name": "duovanguard",
   "version": "4.2.0",
-  "description": "Self-Hosted Duolingo Automation Suite: Streak Keeper, XP/Gems/Streak/Quest Farmer, Leaderboard Tracker, Chess Bot, Web Dashboard & Tampermonkey Companion Userscript (Zero External Dependencies)",
+  "description": "DuoVanguard: Autonomous Duolingo Suite — Streak Guardian, Multi-Mode XP/Gems Farmer, League Dominator, Real-Time Chess Bot vs Oscar/PvP, Local Web Dashboard & Companion Userscript (Zero Dependencies)",
   "author": "Dzakiudin (jakijekiiii) <dzakiudin07@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Dzakiudin/duohacker-pro.git"
+    "url": "https://github.com/Dzakiudin/DuoVanguard.git"
   },
   "type": "module",
   "engines": {
@@ -23,6 +23,6 @@
     "badges": "node autoserver.mjs --badges",
     "shop": "node autoserver.mjs --shop",
     "league": "node autoserver.mjs --league",
-    "check": "node --check duo-core.mjs && node --check gems.mjs && node --check autoserver.mjs && node --check ui.mjs && node --check userscript/duohacker-pro.user.js"
+    "check": "node --check duo-core.mjs && node --check gems.mjs && node --check autoserver.mjs && node --check ui.mjs && node --check userscript/duovanguard.user.js"
   }
 }

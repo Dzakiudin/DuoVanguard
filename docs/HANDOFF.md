@@ -1,6 +1,6 @@
-# HANDOFF — DuoHacker + PRO v4.2 (`duohacker-pro`)
+# HANDOFF — DuoVanguard v4.2 (`DuoVanguard`)
 
-Tool self-hosted lengkap untuk akun Duolingo sendiri. Menggabungkan seluruh fitur backend API + GUI dari **Duolingo DuoHacker V1 v2.6** dan **Duolingo PRO v3.1BETA** ditambah **Duolingo Chess Bot (Vs Oscar & PvP)** ke dalam arsitektur modular Node ESM (`.mjs`), tanpa dependency eksternal, tanpa Docker/VPS.
+Suite otomasi Duolingo self-hosted lengkap untuk akun Duolingo sendiri dengan arsitektur modular Node ESM (`.mjs`), tanpa dependency eksternal, tanpa Docker/VPS.
 
 ## Pembuat & Hak Cipta
 - **Author**: Dzakiudin / jakijekiiii
@@ -11,9 +11,9 @@ Tool self-hosted lengkap untuk akun Duolingo sendiri. Menggabungkan seluruh fitu
 - **Course Aktif**: `fromLanguage = id`, `learningLanguage = ja` (tersedia 3 course terdaftar di profil; dapat diganti langsung lewat modal Course Switcher di dashboard).
 - **Metrik**: streak **1153** (`lastExtendedDate 2026-11-05`, `doneToday: true`), gems **3485**, `totalXp` **1332733**.
 - **Verifikasi End-to-End**:
-  - Seluruh modul `.mjs` (termasuk `src/services/chess.mjs`), `userscript/duohacker-pro.user.js` (v4.1.0), dan `<script>` hasil ekstraksi `src/web/dashboard.html` lolos `node --check`.
+  - Seluruh modul `.mjs` (termasuk `src/services/chess.mjs`), `userscript/duovanguard.user.js` (v4.2.0), dan `<script>` hasil ekstraksi `src/web/dashboard.html` lolos `node --check`.
   - `node autoserver.mjs --verify` & `--status` lolos 100% (dan otomatis membersihkan `duo.alert`).
-  - Seluruh endpoint UI (`GET /`, `/duohacker-pro.user.js`, `/api/status`, `/api/verify`, `/api/shop`, `/api/badges`, `/api/league`, `/api/rewards`, `/api/accounts`, `POST /api/chess/analyze`, `POST /api/chess/move`, `POST /api/act/course`, `POST /api/act/rewards/claim-one`) lolos smoke test.
+  - Seluruh endpoint UI (`GET /`, `/duovanguard.user.js`, `/api/status`, `/api/verify`, `/api/shop`, `/api/badges`, `/api/league`, `/api/rewards`, `/api/accounts`, `POST /api/chess/analyze`, `POST /api/chess/move`, `POST /api/act/course`, `POST /api/act/rewards/claim-one`) lolos smoke test.
 
 ---
 
@@ -35,7 +35,7 @@ D:\#My Project\test
 │   └── web/
 │       └── dashboard.html     # Unified SPA Dashboard v4.1 (8 Modals termasuk Interactive 8x8 Chess Bot, Course Switcher, Individual Chests Explorer, Lite Mode)
 ├── userscript/
-│   └── duohacker-pro.user.js  # Companion Tampermonkey Userscript v4.1.0 (@grant none Main-World React Fiber & Redux Solver + In-Game Chess Bot Overlay + Fake Duolingo Max)
+│   └── duovanguard.user.js    # Companion Tampermonkey Userscript v4.2.0 (@grant none Main-World React Fiber & Redux Solver + In-Game Chess Bot Overlay + Fake Duolingo Max)
 ├── docs/                      # HANDOFF.md + re-findings.md (hasil reverse engineering)
 ├── duo-core.mjs               # Public Core Facade (re-export semua fungsi core & service untuk kompatibilitas mundur)
 ├── gems.mjs                   # Public Quests/Economy Facade (re-export semua fungsi quest, badge & economy)
@@ -55,7 +55,7 @@ Klik dua kali `start-dashboard.bat` atau jalankan `npm start` / `node ui.mjs`, l
 Token UI dibuat sekali, disimpan di `duo.config.state.json` (`uiToken`) dan otomatis di-inject ke halaman. Override dengan env `DUO_UI_TOKEN` bila perlu.
 
 ### 2. Memasang Companion Userscript v4.2.0 di Browser (Auto-Solver + Chess Bot)
-Saat `ui.mjs` berjalan, klik tombol **🧩 Userscript** di navbar atas dashboard (atau buka `http://127.0.0.1:8791/duohacker-pro.user.js`) dengan ekstensi Tampermonkey aktif.
+Saat `ui.mjs` berjalan, klik tombol **🧩 Userscript** di navbar atas dashboard (atau buka `http://127.0.0.1:8791/duovanguard.user.js`) dengan ekstensi Tampermonkey aktif.
 Fitur di dalam halaman `duolingo.com`:
 - **React Fiber & Redux Auto-Solver (`@grant none` Main-World)**:
   - Berjalan langsung di konteks halaman utama (`@grant none`) sehingga properti `__reactFiber$` dan Redux store `store.getState().player` terbaca 100% tanpa diblokir sandbox Tampermonkey.
