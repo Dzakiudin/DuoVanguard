@@ -84,7 +84,6 @@ DuoVanguard/
 ├── userscript/
 │   └── duovanguard.user.js         # Browser companion userscript v4.2 (Auto-Solver + Chess Bot + Max)
 ├── docs/
-│   ├── HANDOFF.md                  # Comprehensive operational status and API reference guide
 │   └── re-findings.md              # Reverse-engineered Duolingo API contracts and telemetry specifications
 ├── autoserver.mjs                  # Command-line interface and scheduled keeper runner
 ├── ui.mjs                          # Local HTTP and streaming NDJSON server (http://127.0.0.1:8791)
